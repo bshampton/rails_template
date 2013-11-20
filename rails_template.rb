@@ -11,8 +11,10 @@ gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
+gem "slim-rails" if yes?("Use Slim instead of ERB?")
+gem 'coffee-rails', '~> 4.0.0' if yes?("Use CoffeeScript?")
 
-# Postgres for database
+# Database
 if yes?("Use Postgres instead of SQLite?")
   gem "pg" 
   remind "This script assumes your account has super-user access to Postgres"
@@ -26,25 +28,26 @@ else
   gem "sqlite3"
 end
 
-# Slim for templating
-gem "slim-rails" if yes?("Use Slim instead of ERB?")
-
-# Coffeescript for JS
-gem 'coffee-rails', '~> 4.0.0' if yes? "Use CoffeeScript?"
-
 # Web server
 if yes?("Use Unicorn?")
-  # Unicorn webserver
   gem "unicorn-rails"
-  # Configure Unicorn
-  run "curl -s https://raw.github.com/heroku/ruby-rails-unicorn-sample/master/config/unicorn.rb > config/unicorn.rb"
-  # Setup Procfile
-  run "echo 'web: bundle exec unicorn -p $PORT -c ./config/unicorn.rb' >> Procfile"
+  run "curl -s https://raw.github.com/heroku/ruby-rails-unicorn-sample/master/config/unicorn.rb > config/unicorn.rb" # Configure Unicorn
+  run "echo 'web: bundle exec unicorn -p $PORT -c ./config/unicorn.rb' >> Procfile" # Setup Procfile
 else
-  # Thin webserver
   gem 'thin'
-  # Setup Procfile
-  run "echo 'web: bundle exec rails server -p $PORT' >> Procfile"
+  run "echo 'web: bundle exec rails server -p $PORT' >> Procfile" # Setup Procfile
+end
+
+# Format Gemfile to make it pretty
+insert_into_file "Gemfile", "\n"
+
+gem_group :development, :test do
+  gem "rspec-rails" 
+  gem "factory_girl_rails"
+end
+
+gem_group :production do
+  gem "rails_12factor"
 end
 
 # Twitter Bootstrap (http://getbootstrap.com/)
@@ -72,20 +75,6 @@ end
 run "touch .env"
 run "echo '.env' >> .gitignore"
 run "echo 'STDOUT.sync = true' >> config/environments/development.rb"
-
-run "echo '' >> Gemfile" # Formatting in Gemfile >:-)
-
-gem_group :development, :test do
-  # Rspec for tests (https://github.com/rspec/rspec-rails)
-  gem "rspec-rails"  
-  # FactoryGirl instead of Rails fixtures (https://github.com/thoughtbot/factory_girl)
-  gem "factory_girl_rails"
-end
-
-gem_group :production do
-  # For Rails 4 deployment on Heroku
-  gem "rails_12factor"
-end
 
 # Initialize RSpec
 generate("rspec:install")

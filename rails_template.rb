@@ -1,4 +1,4 @@
-def remind(msg); say set_color( "REMEMBER ", :red ) + set_color(msg, :yellow) end
+def remind(msg); say set_color("REMEMBER ", :red) + set_color(msg, :yellow) end
 
 # Reset Gemfile
 run %Q[echo "source 'https://rubygems.org'" > Gemfile]
@@ -38,7 +38,7 @@ else
   run "echo 'web: bundle exec rails server -p $PORT' >> Procfile" # Setup Procfile
 end
 
-# Format Gemfile to make it pretty
+# Add newline to Gemfile to make it pretty
 insert_into_file "Gemfile", "\n"
 
 gem_group :development, :test do
@@ -71,7 +71,7 @@ if yes?("Download font-awesome?")
   insert_into_file "app/assets/stylesheets/application.css", " *= require font-awesome\n",  before: " *= require_self\n"
 end
 
-# Setup Foreman (https://github.com/ddollar/foreman)
+# Configure Foreman (https://github.com/ddollar/foreman)
 run "touch .env"
 run "echo '.env' >> .gitignore"
 run "echo 'STDOUT.sync = true' >> config/environments/development.rb"

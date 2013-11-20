@@ -39,7 +39,7 @@ else
 end
 
 # Add newline to Gemfile to make it pretty
-insert_into_file "Gemfile", "\n"
+append_to_file "Gemfile", "\n"
 
 gem_group :development, :test do
   gem "rspec-rails" 

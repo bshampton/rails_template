@@ -9,9 +9,9 @@ gem 'rails', '4.0.0'
 gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
-gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
 gem "slim-rails" if yes?("Use Slim instead of ERB?")
+gem 'turbolinks' if yes?("Use Turbolinks?")
 gem 'coffee-rails', '~> 4.0.0' if yes?("Use CoffeeScript?")
 
 # Database
@@ -39,7 +39,7 @@ else
 end
 
 # Add newline to Gemfile to make it pretty
-append_to_file "Gemfile", "\n"
+run "echo '' >> Gemfile"
 
 gem_group :development, :test do
   gem "rspec-rails" 

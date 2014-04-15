@@ -11,7 +11,11 @@ gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 1.2'
 gem "slim-rails" if yes?("Use Slim instead of ERB?")
-gem 'turbolinks' if yes?("Use Turbolinks?")
+if yes?("Use Turbolinks?")
+  gem 'turbolinks' 
+else
+  gsub_file "app/assets/javascripts/application.js", /\/\/= require turbolinks/, ""
+end
 gem 'coffee-rails', '~> 4.0.0' if yes?("Use CoffeeScript?")
 
 # Database
